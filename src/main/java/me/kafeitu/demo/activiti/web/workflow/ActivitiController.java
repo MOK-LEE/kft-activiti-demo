@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import me.kafeitu.demo.activiti.cmd.JumpActivityCmd;
+import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.service.activiti.WorkflowProcessDefinitionService;
 import me.kafeitu.demo.activiti.service.activiti.WorkflowTraceService;
 import me.kafeitu.demo.activiti.util.Page;
@@ -84,6 +85,8 @@ public class ActivitiController {
 
     @Autowired
     ManagementService managementService;
+    @Autowired
+    private RedisSessionContext redisSessionContext;
 
     protected static Map<String, ProcessDefinition> PROCESS_DEFINITION_CACHE = new HashMap<String, ProcessDefinition>();
 
@@ -312,33 +315,35 @@ public class ActivitiController {
      */
     @RequestMapping(value = "/task/todo/list")
     @ResponseBody
-    public List<Map<String, Object>> todoList(HttpSession session) throws Exception {
-        User user = UserUtil.getUserFromSession(session);
+    public List<Map<String, Object>> todoList(HttpServletRequest request,HttpSession session) throws Exception {
+//        User user = UserUtil.getUserFromSession(session);
+        User user = redisSessionContext.getWebUser(request);
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        if(null!=user){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
-        // 已经签收的任务
-        List<Task> todoList = taskService.createTaskQuery().taskAssignee(user.getId()).active().list();
-        for (Task task : todoList) {
-            String processDefinitionId = task.getProcessDefinitionId();
-            ProcessDefinition processDefinition = getProcessDefinition(processDefinitionId);
+            // 已经签收的任务
+            List<Task> todoList = taskService.createTaskQuery().taskAssignee(user.getId()).active().list();
+            for (Task task : todoList) {
+                String processDefinitionId = task.getProcessDefinitionId();
+                ProcessDefinition processDefinition = getProcessDefinition(processDefinitionId);
 
-            Map<String, Object> singleTask = packageTaskInfo(sdf, task, processDefinition);
-            singleTask.put("status", "todo");
-            result.add(singleTask);
+                Map<String, Object> singleTask = packageTaskInfo(sdf, task, processDefinition);
+                singleTask.put("status", "todo");
+                result.add(singleTask);
+            }
+
+            // 等待签收的任务
+            List<Task> toClaimList = taskService.createTaskQuery().taskCandidateUser(user.getId()).active().list();
+            for (Task task : toClaimList) {
+                String processDefinitionId = task.getProcessDefinitionId();
+                ProcessDefinition processDefinition = getProcessDefinition(processDefinitionId);
+
+                Map<String, Object> singleTask = packageTaskInfo(sdf, task, processDefinition);
+                singleTask.put("status", "claim");
+                result.add(singleTask);
+            }
         }
-
-        // 等待签收的任务
-        List<Task> toClaimList = taskService.createTaskQuery().taskCandidateUser(user.getId()).active().list();
-        for (Task task : toClaimList) {
-            String processDefinitionId = task.getProcessDefinitionId();
-            ProcessDefinition processDefinition = getProcessDefinition(processDefinitionId);
-
-            Map<String, Object> singleTask = packageTaskInfo(sdf, task, processDefinition);
-            singleTask.put("status", "claim");
-            result.add(singleTask);
-        }
-
         return result;
     }
 

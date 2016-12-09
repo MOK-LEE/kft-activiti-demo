@@ -1,4 +1,7 @@
 <%@page import="me.kafeitu.demo.activiti.util.PropertyFileUtil"%>
+<%@page import="javax.servlet.http.HttpServletRequest"%>
+<%@page import="me.kafeitu.demo.activiti.rediscache.RedisSessionContext"%>
+<%@page import="me.kafeitu.demo.activiti.entity.account.User"%>
 <%@page import="org.springframework.beans.factory.config.PropertiesFactoryBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -9,11 +12,18 @@ PropertyFileUtil.init();
 <head>
 	<%@ include file="/common/global.jsp"%>
 	<script>
-		var notLogon = ${empty user};
+		/* var notLogon = ${empty user};
 		if (notLogon) {
 			location.href = '${ctx}/login?timeout=true';
-		}
+		} */
 	</script>
+	<%-- <% 
+	RedisSessionContext redis = new RedisSessionContext();
+	User user = redis.getWebUser(request);
+	if(user == null){
+	    response.sendRedirect("${ctx}/login?timeout=true");
+	}
+	%> --%>
 	<%@ include file="/common/meta.jsp" %>
     <title>Activiti-演示系统-咖啡兔(闫洪磊)</title>
     <%@ include file="/common/include-base-styles.jsp" %>

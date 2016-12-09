@@ -9,6 +9,7 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -32,7 +33,8 @@ public class UserControllerTest extends SpringTransactionalTestCase {
 		UseController c = new UseController();
 		c.setIdentityService(identityService);
 		MockHttpSession session = new MockHttpSession();
-		String view = c.logon("kafeitu", "000000", session);
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		String view = c.logon("kafeitu", "000000", session,request);
 		assertEquals("redirect:/main/index", view);
 		assertNotNull(session.getAttribute("user"));
 		User user = (User) session.getAttribute("user");
@@ -48,7 +50,8 @@ public class UserControllerTest extends SpringTransactionalTestCase {
 		UseController c = new UseController();
 		c.setIdentityService(identityService);
 		MockHttpSession session = new MockHttpSession();
-		String view = c.logon("nothisuser", "000000", session);
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		String view = c.logon("nothisuser", "000000", session,request);
 		assertEquals("redirect:/login?error=true", view);
 	}
 

@@ -4,10 +4,10 @@
 <head>
 	<%@ include file="/common/global.jsp"%>
 	<script>
-		var notLogon = ${empty user};
+		/* var notLogon = ${empty user};
 		if (notLogon) {
 			location.href = '${ctx}/login?error=nologon';
-		}
+		} */
 	</script>
 	<%@ include file="/common/meta.jsp" %>
 	<%@ include file="/common/include-base-styles.jsp" %>

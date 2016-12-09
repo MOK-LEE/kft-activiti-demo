@@ -6,7 +6,7 @@
 	<%@ include file="/common/global.jsp"%>
 	<title>KAD登录页 - 咖啡兔(闫洪磊)</title>
 	<script>
-		var logon = ${not empty user};
+	    var logon = ${not empty user};
 		if (logon) {
 			location.href = '${ctx}/main/index';
 		}

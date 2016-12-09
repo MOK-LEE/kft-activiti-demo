@@ -1,6 +1,7 @@
 package me.kafeitu.demo.activiti.web.oa.leave;
 
 import me.kafeitu.demo.activiti.entity.oa.Leave;
+import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.service.oa.leave.LeaveManager;
 import me.kafeitu.demo.activiti.service.oa.leave.LeaveWorkflowService;
 import me.kafeitu.demo.activiti.util.Page;
@@ -52,6 +53,8 @@ public class LeaveController {
 
     @Autowired
     protected TaskService taskService;
+    @Autowired
+    private RedisSessionContext redisSessionContext;
 
     @RequestMapping(value = {"apply", ""})
     public String createForm(Model model) {
@@ -65,9 +68,10 @@ public class LeaveController {
      * @param leave
      */
     @RequestMapping(value = "start", method = RequestMethod.POST)
-    public String startWorkflow(Leave leave, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String startWorkflow(Leave leave, RedirectAttributes redirectAttributes, HttpSession session,HttpServletRequest request) {
         try {
-            User user = UserUtil.getUserFromSession(session);
+//            User user = UserUtil.getUserFromSession(session);
+            User user = redisSessionContext.getWebUser(request);
             // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
             if (user == null || StringUtils.isBlank(user.getId())) {
                 return "redirect:/login?timeout=true";
@@ -102,9 +106,13 @@ public class LeaveController {
         Page<Leave> page = new Page<Leave>(PageUtil.PAGE_SIZE);
         int[] pageParams = PageUtil.init(page, request);
 
-        String userId = UserUtil.getUserFromSession(session).getId();
-        workflowService.findTodoTasks(userId, page, pageParams);
-        mav.addObject("page", page);
+//        String userId = UserUtil.getUserFromSession(session).getId();
+        User user = redisSessionContext.getWebUser(request);
+        if(null!=user){
+            String userId = user.getId();
+            workflowService.findTodoTasks(userId, page, pageParams);
+            mav.addObject("page", page);
+        }
         return mav;
     }
 
@@ -142,8 +150,10 @@ public class LeaveController {
      * 签收任务
      */
     @RequestMapping(value = "task/claim/{id}")
-    public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes) {
-        String userId = UserUtil.getUserFromSession(session).getId();
+    public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request) {
+//        String userId = UserUtil.getUserFromSession(session).getId();
+        User user = redisSessionContext.getWebUser(request);
+        String userId = user.getId();
         taskService.claim(taskId, userId);
         redirectAttributes.addFlashAttribute("message", "任务已签收");
         return "redirect:/oa/leave/list/task";
