@@ -26,6 +26,9 @@
 	<bean id="jedisConnection" class="me.kafeitu.demo.activiti.rediscache.JedisConnection">
 		<property name="template" ref="redisTemplate"></property>
 	</bean>
+	
+	<!--springSession 配置-->
+    <bean id="sessionConfiguration" class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
 
 	<!-- 数据源配置, 使用DBCP数据库连接池 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
