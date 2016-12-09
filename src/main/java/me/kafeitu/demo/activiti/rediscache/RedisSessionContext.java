@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RedisSessionContext {
-	private static final String WEB_USER = "demo-activiti";
+	private static final String WEB_USER = "demo-activiti_";
 	// session分钟过期时间
 	@Value("${web.session.minTimeout}")
 	private int webSessionMinTimeOut = 10;
