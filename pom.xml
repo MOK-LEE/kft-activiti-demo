@@ -78,11 +78,6 @@
 			</exclusions>
 		</dependency>
 		<!-- redis end -->
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session</artifactId>
-			<version>1.0.0.RELEASE</version>
-		</dependency>
 		<!-- json -->
 		<dependency>
 			<groupId>com.alibaba</groupId>

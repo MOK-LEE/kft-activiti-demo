@@ -15,6 +15,15 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
+    <!-- 防止浏览器缓存页面或请求结果 -->  
+    <filter>  
+        <filter-name>NoCacheFilter</filter-name>  
+        <filter-class>me.kafeitu.demo.activiti.interceptor.NoCacheFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>NoCacheFilter</filter-name>  
+        <url-pattern>/*</url-pattern> <!-- 根据需要调整url-pattern  --> 
+    </filter-mapping> 
 	<!-- Filter 定义 -->
 	<!-- Character Encoding filter -->
 	<filter>
