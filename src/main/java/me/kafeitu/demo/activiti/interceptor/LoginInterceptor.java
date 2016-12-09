@@ -21,7 +21,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter implements Appli
             Object handler) throws Exception {
         Object o = redisSession.getWebUser(request);
         if(null==o){
-            redisSession.setWebUser(request, null);
+//            redisSession.setWebUser(request, null);
 //            String url = request.getRequestURL().toString();
             response.sendRedirect("/kft-activiti-demo/login?timeout=true");
             return false;
