@@ -39,6 +39,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>  
             <!-- <mvc:mapping path="/main/index*"/> -->
+            <mvc:exclude-mapping path="/"/>
             <mvc:exclude-mapping path="/main/index"/>
             <mvc:exclude-mapping path="/login"/>
             <mvc:exclude-mapping path="/user/logon"/>
@@ -49,6 +50,7 @@
             <mvc:exclude-mapping path="/**/*.gif"/>
             <mvc:exclude-mapping path="/**/*.jpeg"/>
             <mvc:exclude-mapping path="/**/*.jpg"/>
+            <mvc:exclude-mapping path="/*.html"/>
             <bean id="loginInterceptor" class="me.kafeitu.demo.activiti.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors> 
