@@ -20,9 +20,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter implements Appli
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler) throws Exception {
         Object o = redisSession.getWebUser(request);
-        if(null!=o){
+        if(null==o){
             response.sendRedirect("/kft-activiti-demo/login?timeout=true");
-            return true;
+            return false;
         }
         return true;
         

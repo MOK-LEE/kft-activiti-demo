@@ -17,13 +17,6 @@ PropertyFileUtil.init();
 			location.href = '${ctx}/login?timeout=true';
 		} */
 	</script>
-	<%-- <% 
-	RedisSessionContext redis = new RedisSessionContext();
-	User user = redis.getWebUser(request);
-	if(user == null){
-	    response.sendRedirect("${ctx}/login?timeout=true");
-	}
-	%> --%>
 	<%@ include file="/common/meta.jsp" %>
     <title>Activiti-演示系统-咖啡兔(闫洪磊)</title>
     <%@ include file="/common/include-base-styles.jsp" %>
