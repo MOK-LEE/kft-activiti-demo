@@ -37,18 +37,15 @@
 	<!-- 拦截器 -->
      <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>  
-            <mvc:exclude-mapping path="/main/index"/>
+            <mvc:mapping path="/**/*.jsp"/>  
+            <!-- <mvc:exclude-mapping path="/main/index"/>
             <mvc:exclude-mapping path="/login*"/>
             <mvc:exclude-mapping path="/user/logon"/>
             <mvc:exclude-mapping path="/**/*.css"/>
             <mvc:exclude-mapping path="/**/*.js"/>
-            <mvc:exclude-mapping path="/**/.jsp"/>
+            <mvc:exclude-mapping path="/**/*.jsp"/>
             <mvc:exclude-mapping path="/images/**"/>
-            <mvc:exclude-mapping path="/img/**"/>
-            <!-- <mvc:exclude-mapping path="/views/*"/>
-            <mvc:exclude-mapping path="/tags/*"/>
-            <mvc:exclude-mapping path="/*.html"/> -->
+            <mvc:exclude-mapping path="/img/**"/> -->
             <bean id="loginInterceptor" class="me.kafeitu.demo.activiti.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors> 
