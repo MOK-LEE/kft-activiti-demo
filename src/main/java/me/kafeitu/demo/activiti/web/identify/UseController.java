@@ -66,7 +66,6 @@ public class UseController {
                 //redisSessionContext.setUser(request, ArrayUtils.toString(groupNames));
                 return "redirect:/main/index";
             } else {
-                redisSessionContext.setWebUser(request, null);
                 return "redirect:/login?error=true";
             }
         }
