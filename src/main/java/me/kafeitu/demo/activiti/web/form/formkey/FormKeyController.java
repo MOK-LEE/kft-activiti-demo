@@ -1,5 +1,6 @@
 package me.kafeitu.demo.activiti.web.form.formkey;
 
+import me.kafeitu.demo.activiti.rediscache.CookieConst;
 import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.util.Page;
 import me.kafeitu.demo.activiti.util.PageUtil;
@@ -143,7 +144,8 @@ public class FormKeyController {
         logger.debug("start form parameters: {}", formProperties);
 
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
 
         // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
         if (user == null || StringUtils.isBlank(user.getId())) {
@@ -185,7 +187,8 @@ public class FormKeyController {
         logger.debug("start form parameters: {}", formProperties);
 
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
         if (user == null || StringUtils.isBlank(user.getId())) {
             return "redirect:/login?timeout=true";
@@ -214,7 +217,8 @@ public class FormKeyController {
     public ModelAndView taskList(Model model, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("/form/formkey/formkey-task-list");
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         Page<Task> page = new Page<Task>(PageUtil.PAGE_SIZE);
         int[] pageParams = PageUtil.init(page, request);
 
@@ -249,8 +253,10 @@ public class FormKeyController {
     @RequestMapping(value = "task/claim/{id}")
     public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request) {
 //        String userId = UserUtil.getUserFromSession(session).getId();
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
         String userId = user.getId();
+//        User user = redisSessionContext.getWebUser(request);
+//        String userId = user.getId();
         taskService.claim(taskId, userId);
         redirectAttributes.addFlashAttribute("message", "任务已签收");
         return "redirect:/form/formkey/task/list";

@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import me.kafeitu.demo.activiti.cmd.JumpActivityCmd;
+import me.kafeitu.demo.activiti.rediscache.CookieConst;
 import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.service.activiti.WorkflowProcessDefinitionService;
 import me.kafeitu.demo.activiti.service.activiti.WorkflowTraceService;
@@ -317,7 +318,8 @@ public class ActivitiController {
     @ResponseBody
     public List<Map<String, Object>> todoList(HttpServletRequest request,HttpSession session) throws Exception {
 //        User user = UserUtil.getUserFromSession(session);
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
         if(null!=user){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");

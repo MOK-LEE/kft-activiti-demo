@@ -22,16 +22,39 @@
 	</bean>
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
 		<property name="connectionFactory" ref="jedisConnectionFactory" />
+		<property name="keySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="valueSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="hashKeySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="hashValueSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
 	</bean>
+	<bean id="defaultCookieSerializer"  
+        class="org.springframework.session.web.http.DefaultCookieSerializer">  
+        <property name="cookieName" value="activiti_demo_cookie" />  
+        <property name="cookiePath" value="/" />  
+    </bean>  
+    <bean id="cookieHttpSessionStrategy"  
+        class="org.springframework.session.web.http.CookieHttpSessionStrategy">  
+        <property name="cookieSerializer" ref="defaultCookieSerializer" />  
+    </bean>  
 	<bean id="jedisConnection" class="me.kafeitu.demo.activiti.rediscache.JedisConnection">
 		<property name="template" ref="redisTemplate"></property>
 	</bean>
-	
-	<!--springSession 配置-->
-    <bean id="sessionConfiguration" 
-        class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration" >
-        <property name="maxInactiveIntervalInSeconds" value="3600"></property>
-    </bean>
+	<!--springSession 配置 -->
+	<!-- <bean id="sessionConfiguration" class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration" 
+		> <property name="maxInactiveIntervalInSeconds" value="3600"></property> 
+		</bean> -->
 
 	<!-- 数据源配置, 使用DBCP数据库连接池 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

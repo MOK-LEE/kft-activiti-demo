@@ -1,6 +1,7 @@
 package me.kafeitu.demo.activiti.web.oa.leave;
 
 import me.kafeitu.demo.activiti.entity.oa.Leave;
+import me.kafeitu.demo.activiti.rediscache.CookieConst;
 import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.service.oa.leave.LeaveManager;
 import me.kafeitu.demo.activiti.service.oa.leave.LeaveWorkflowService;
@@ -71,7 +72,8 @@ public class LeaveController {
     public String startWorkflow(Leave leave, RedirectAttributes redirectAttributes, HttpSession session,HttpServletRequest request) {
         try {
 //            User user = UserUtil.getUserFromSession(session);
-            User user = redisSessionContext.getWebUser(request);
+            User user = (User) redisSessionContext.getCookie(request);
+//            User user = redisSessionContext.getWebUser(request);
             // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
             if (user == null || StringUtils.isBlank(user.getId())) {
                 return "redirect:/login?timeout=true";
@@ -107,12 +109,16 @@ public class LeaveController {
         int[] pageParams = PageUtil.init(page, request);
 
 //        String userId = UserUtil.getUserFromSession(session).getId();
-        User user = redisSessionContext.getWebUser(request);
-        if(null!=user){
-            String userId = user.getId();
-            workflowService.findTodoTasks(userId, page, pageParams);
-            mav.addObject("page", page);
-        }
+//        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+        String userId = user.getId();
+        workflowService.findTodoTasks(userId, page, pageParams);
+        mav.addObject("page", page);
+//        if(null!=user){
+//            String userId = user.getId();
+//            workflowService.findTodoTasks(userId, page, pageParams);
+//            mav.addObject("page", page);
+//        }
         return mav;
     }
 
@@ -152,8 +158,10 @@ public class LeaveController {
     @RequestMapping(value = "task/claim/{id}")
     public String claim(@PathVariable("id") String taskId, HttpSession session, RedirectAttributes redirectAttributes,HttpServletRequest request) {
 //        String userId = UserUtil.getUserFromSession(session).getId();
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
         String userId = user.getId();
+//        User user = redisSessionContext.getWebUser(request);
+//        String userId = user.getId();
         taskService.claim(taskId, userId);
         redirectAttributes.addFlashAttribute("message", "任务已签收");
         return "redirect:/oa/leave/list/task";

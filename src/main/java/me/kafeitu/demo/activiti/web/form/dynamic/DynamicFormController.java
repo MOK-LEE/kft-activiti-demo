@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import me.kafeitu.demo.activiti.rediscache.CookieConst;
 import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
 import me.kafeitu.demo.activiti.util.Page;
 import me.kafeitu.demo.activiti.util.PageUtil;
@@ -197,7 +198,8 @@ public class DynamicFormController {
         logger.debug("start form parameters: {}", formProperties);
 
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
         if (user == null || StringUtils.isBlank(user.getId())) {
             return "redirect:/login?timeout=true";
@@ -239,7 +241,8 @@ public class DynamicFormController {
         logger.debug("start form parameters: {}", formProperties);
 
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         // 用户未登录不能操作，实际应用使用权限框架实现，例如Spring Security、Shiro等
         if (user == null || StringUtils.isBlank(user.getId())) {
             return "redirect:/login?timeout=true";
@@ -268,7 +271,8 @@ public class DynamicFormController {
                                  HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("/form/dynamic/dynamic-form-task-list");
 //        User user = UserUtil.getUserFromSession(request.getSession());
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
+//        User user = redisSessionContext.getWebUser(request);
         List<Task> tasks = new ArrayList<Task>();
 
         if (!StringUtils.equals(processType, "all")) {
@@ -305,8 +309,10 @@ public class DynamicFormController {
                         HttpServletRequest request,
                         RedirectAttributes redirectAttributes) {
 //        String userId = UserUtil.getUserFromSession(session).getId();
-        User user = redisSessionContext.getWebUser(request);
+        User user = (User) redisSessionContext.getCookie(request);
         String userId = user.getId();
+//        User user = redisSessionContext.getWebUser(request);
+//        String userId = user.getId();
         taskService.claim(taskId, userId);
         redirectAttributes.addFlashAttribute("message", "任务已签收");
         return "redirect:/form/dynamic/task/list?processType=" + StringUtils.defaultString(request.getParameter("processType"));

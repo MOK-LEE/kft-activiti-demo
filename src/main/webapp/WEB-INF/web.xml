@@ -16,6 +16,12 @@
 	</listener>
 
 	<!-- Filter 定义 -->
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>
+            org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
 	<!-- Character Encoding filter -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -54,19 +60,12 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>
-			org.springframework.web.filter.DelegatingFilterProxy
-		</filter-class>
-	</filter>
-
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/rest/*</url-pattern>
 		<dispatcher>ERROR</dispatcher>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
+		<dispatcher>REQUEST</dispatcher>	
+		</filter-mapping>
 
     <!-- 注册WebService -->
     <servlet>

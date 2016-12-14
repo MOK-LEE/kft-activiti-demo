@@ -42,6 +42,7 @@
             <mvc:exclude-mapping path="/"/>
             <mvc:exclude-mapping path="/main/index"/>
             <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/login/"/>
             <mvc:exclude-mapping path="/user/logon"/>
             <mvc:exclude-mapping path="/**/*.css"/>
             <mvc:exclude-mapping path="/**/*.js"/>

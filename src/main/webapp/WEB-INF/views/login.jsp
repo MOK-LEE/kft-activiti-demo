@@ -59,7 +59,7 @@
                 <a href="http://www.kafeitu.me/about.html" target="_blank" style="text-decoration: none;">（By 咖啡兔）</a></h3>
 		</div>
 		<hr />
-		<form action="${ctx }/user/logon" method="get">
+		<form action="${ctx }/user/logon" method="post">
 			<table>
 				<tr>
 					<td width="200" style="text-align: right;">用户名：</td>

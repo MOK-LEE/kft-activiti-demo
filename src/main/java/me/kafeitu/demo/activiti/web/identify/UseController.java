@@ -1,6 +1,9 @@
 package me.kafeitu.demo.activiti.web.identify;
 
+import me.kafeitu.demo.activiti.rediscache.CookieConst;
 import me.kafeitu.demo.activiti.rediscache.RedisSessionContext;
+import me.kafeitu.demo.activiti.util.UserUtil;
+
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
@@ -11,9 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 用户相关控制器
@@ -40,7 +46,8 @@ public class UseController {
      * @return
      */
     @RequestMapping(value = "/logon")
-    public String logon(@RequestParam("username") String userName, @RequestParam("password") String password, HttpSession session,HttpServletRequest request) {
+    public String logon(@RequestParam("username") String userName, @RequestParam("password") String password, 
+            HttpSession session,HttpServletRequest request,HttpServletResponse response) {
         logger.debug("logon request: {username={}, password={}}", userName, password);
         
         User user_account = redisSessionContext.getWebUser(request);
@@ -51,9 +58,9 @@ public class UseController {
             if (checkPassword) {
                 // read user from database
                 User user = identityService.createUserQuery().userId(userName).singleResult();
-//              UserUtil.saveUserToSession(session, user);
-                redisSessionContext.setWebUser(request, user);
-
+//                UserUtil.saveUserToSession(session, user);
+//                redisSessionContext.setWebUser(request, user);
+                redisSessionContext.setCookieUser(response,user);
 //                List<Group> groupList = identityService.createGroupQuery().groupMember(userName).list();
 ////                session.setAttribute("groups", groupList);
 //    //
@@ -73,8 +80,8 @@ public class UseController {
 
     @RequestMapping(value = "/logout")
     public String logout(HttpSession session,HttpServletRequest request) {
-        //session.removeAttribute("user");
-        redisSessionContext.removeWebUser(request);
+//        session.removeAttribute("user");
+        redisSessionContext.removeCookie(CookieConst.USER_COOKIE);
         return "/login";
     }
 
